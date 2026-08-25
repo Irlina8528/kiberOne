@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Расписание групп — 2026–2027</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* все стили как раньше — они уже были, я их не менял */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background: #f0f4f9; padding: 40px 20px; color: #1a2639; line-height: 1.5; }
+        .container { max-width: 1280px; margin: 0 auto; }
+        .header {
+            background: linear-gradient(145deg, #0b1a33 0%, #1d3b5c 100%);
+            border-radius: 28px;
+            padding: 40px 48px 32px;
+            margin-bottom: 44px;
+            box-shadow: 0 16px 40px -8px rgba(10, 30, 60, 0.35);
+            position: relative;
+            overflow: hidden;
+        }
+        .header::after {
+            content: "";
+            position: absolute;
+            top: -60%;
+            right: -10%;
+            width: 380px;
+            height: 380px;
+            background: rgba(255, 215, 100, 0.07);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .header-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 16px 24px; position: relative; z-index: 1; }
+        .header h1 { font-size: 2.2rem; font-weight: 700; color: #ffffff; letter-spacing: -0.02em; margin: 0; }
+        .header h1 i { color: #f7c948; margin-right: 12px; }
+        .header .sub { color: rgba(255, 255, 255, 0.8); font-size: 1.05rem; font-weight: 400; margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px 22px; }
+        .header .sub span { background: rgba(255, 255, 255, 0.10); padding: 4px 18px 4px 14px; border-radius: 40px; backdrop-filter: blur(4px); display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(255, 255, 255, 0.06); }
+        .header .sub i { color: #f7c948; font-size: 0.9rem; width: 1.1rem; text-align: center; }
+        .header .badge-total { background: rgba(255, 215, 100, 0.15); border: 1px solid rgba(255, 215, 100, 0.25); border-radius: 60px; padding: 8px 22px; color: #f7c948; font-weight: 600; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 10px; backdrop-filter: blur(4px); white-space: nowrap; }
+        .header .badge-total i { font-size: 1.1rem; }
+
+        .nav-groups {
+            display: flex; flex-wrap: wrap; gap: 10px 14px; margin-bottom: 36px;
+            background: #ffffffcc; backdrop-filter: blur(8px); padding: 12px 20px;
+            border-radius: 60px; box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+            border: 1px solid rgba(255,255,255,0.6); justify-content: center;
+        }
+        .nav-groups a { text-decoration: none; font-weight: 600; font-size: 0.95rem; color: #1a3b5d; padding: 6px 18px; border-radius: 40px; transition: 0.2s; background: transparent; display: inline-flex; align-items: center; gap: 8px; }
+        .nav-groups a i { font-size: 0.9rem; opacity: 0.6; }
+        .nav-groups a:hover { background: #1a3b5d; color: #fff; transform: translateY(-1px); box-shadow: 0 6px 14px rgba(26,59,93,0.2); }
+        .nav-groups a:hover i { opacity: 1; color: #f7c948; }
+
+        .group-card {
+            background: #ffffff; border-radius: 24px; box-shadow: 0 8px 28px -6px rgba(0,20,40,0.10);
+            padding: 28px 32px 32px; margin-bottom: 40px; border: 1px solid rgba(255,255,255,0.6);
+            transition: 0.2s;
+        }
+        .group-card:hover { box-shadow: 0 14px 40px -8px rgba(0,20,40,0.18); }
+        .group-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 16px; gap: 10px 20px; }
+        .group-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 18px; }
+        .group-title h2 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.01em; margin: 0; color: #0b1a33; }
+        .group-title h2 i { color: #f7c948; margin-right: 8px; font-size: 1.3rem; }
+        .level-tag { display: inline-block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; padding: 4px 16px; border-radius: 40px; background: #e8edf5; color: #1a3b5d; }
+        .level-tag.senior { background: #d4e0f0; color: #0b2a4a; }
+        .level-tag.middle { background: #e0eaf5; color: #1a3b5d; }
+        .year-badge { display: inline-block; font-size: 0.8rem; font-weight: 600; background: #f7c948; color: #0b1a33; padding: 4px 16px; border-radius: 40px; margin-left: 6px; letter-spacing: 0.02em; box-shadow: 0 2px 6px rgba(247, 201, 72, 0.3); }
+        .group-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 0.95rem; color: #2c4a6a; background: #f6faff; padding: 6px 18px 6px 16px; border-radius: 40px; border: 1px solid #e9eff6; }
+        .group-meta i { color: #f7c948; width: 1.2rem; text-align: center; }
+        .group-meta .num { font-weight: 700; color: #0b1a33; }
+
+        .table-wrap { overflow-x: auto; margin-top: 6px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.95rem; border-radius: 16px; overflow: hidden; }
+        thead th { background: #1a3b5d; color: #fff; font-weight: 600; padding: 12px 16px; text-align: left; border: none; font-size: 0.9rem; letter-spacing: 0.02em; }
+        thead th:first-child { width: 50px; }
+        thead th:nth-child(2) { width: auto; }
+        thead th:nth-child(3), thead th:nth-child(4) { width: 100px; text-align: center; }
+        tbody td { padding: 12px 16px; border-bottom: 1px solid #e9eff6; vertical-align: middle; background: #ffffff; }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover td { background: #f8fbff; }
+        tbody td:first-child { font-weight: 600; color: #1a3b5d; text-align: center; }
+        tbody td:nth-child(3), tbody td:nth-child(4) { text-align: center; font-weight: 600; }
+        tbody td:nth-child(3) { color: #1a3b5d; }
+        tbody td:nth-child(4) { color: #2c5a7a; }
+
+        tr.open-lesson td { background: #fff8e1 !important; border-left: 4px solid #f7c948; }
+        tr.open-lesson td:first-child { border-left: none; }
+        tr.open-lesson td:nth-child(2)::before { content: "🎓 "; font-size: 1rem; }
+
+        .total-row td { background: #eaf1fa !important; font-weight: 700; border-top: 2px solid #1a3b5d; padding: 14px 16px; }
+        .total-row td:first-child { text-align: right; padding-right: 20px; }
+        .total-row td:last-child { color: #0b1a33; }
+        .total-row td:nth-child(3), .total-row td:nth-child(4) { font-size: 1.05rem; color: #0b1a33; }
+
+        .module-icon { display: inline-block; width: 28px; text-align: center; color: #f7c948; font-size: 0.9rem; margin-right: 6px; }
+
+        .footer-note { margin-top: 32px; text-align: center; color: #5a6f86; font-size: 0.9rem; border-top: 1px solid #dce4ed; padding-top: 24px; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 30px; }
+        .footer-note i { color: #f7c948; margin-right: 6px; }
+        .footer-note span { background: #f6faff; padding: 2px 14px; border-radius: 40px; border: 1px solid #e9eff6; }
+
+        @media (max-width: 768px) {
+            body { padding: 16px 12px; }
+            .header { padding: 28px 20px 24px; border-radius: 20px; }
+            .header h1 { font-size: 1.6rem; }
+            .header .sub { font-size: 0.9rem; flex-direction: column; gap: 6px; }
+            .header .badge-total { font-size: 0.9rem; padding: 6px 16px; white-space: normal; }
+            .nav-groups { padding: 10px 14px; border-radius: 30px; gap: 6px 10px; justify-content: center; }
+            .nav-groups a { font-size: 0.8rem; padding: 4px 12px; }
+            .group-card { padding: 18px 16px 22px; border-radius: 18px; }
+            .group-title h2 { font-size: 1.25rem; }
+            .group-meta { font-size: 0.8rem; padding: 4px 12px; }
+            .year-badge { font-size: 0.7rem; padding: 2px 12px; }
+            table { font-size: 0.8rem; }
+            thead th, tbody td { padding: 8px 10px; }
+            thead th:nth-child(3), thead th:nth-child(4), tbody td:nth-child(3), tbody td:nth-child(4) { width: auto; min-width: 50px; }
+            .module-icon { width: 20px; font-size: 0.75rem; }
+        }
+        @media (max-width: 480px) {
+            .header h1 { font-size: 1.3rem; }
+            .header .badge-total { font-size: 0.8rem; }
+            .group-title h2 { font-size: 1.1rem; }
+            .level-tag { font-size: 0.65rem; padding: 2px 12px; }
+            .year-badge { font-size: 0.6rem; padding: 2px 8px; }
+            table { font-size: 0.7rem; }
+            thead th, tbody td { padding: 6px 6px; }
+            .nav-groups a { font-size: 0.7rem; padding: 3px 8px; }
+        }
+        .group-card { animation: fadeUp 0.5s ease-out both; }
+        .group-card:nth-child(2) { animation-delay: 0.08s; }
+        .group-card:nth-child(3) { animation-delay: 0.16s; }
+        .group-card:nth-child(4) { animation-delay: 0.24s; }
+        @keyframes fadeUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- ШАПКА -->
+    <header class="header">
+        <div class="header-top">
+            <div>
+                <h1><i class="fas fa-graduation-cap"></i> Расписание занятий</h1>
+                <div class="sub">
+                    <span><i class="fas fa-calendar-alt"></i> Учебный год 2026–2027</span>
+                    <span><i class="fas fa-user"></i> Преподаватель: Ирина</span>
+                    <span><i class="fas fa-map-pin"></i> Локация: Карельцева 105</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- НАВИГАЦИЯ -->
+    <nav class="nav-groups">
+        <a href="#group1"><i class="fas fa-1"></i> Суб 10:00</a>
+        <a href="#group2"><i class="fas fa-2"></i> Суб 12:30</a>
+        <a href="#group3"><i class="fas fa-3"></i> Суб 15:00</a>
+        <a href="#group4"><i class="fas fa-4"></i> Суб 17:30</a>
+    </nav>
+
+    <!-- ГРУППА 1 -->
+    <section class="group-card" id="group1">
+        <div class="group-header">
+            <div class="group-title">
+                <h2><i class="fas fa-users"></i> Группа 1</h2>
+                <span class="level-tag senior"><i class="fas fa-star"></i> Старшая</span>
+                <span class="year-badge"><i class="fas fa-calendar-check"></i> 3-й год</span>
+            </div>
+            <div class="group-meta">
+                <span><i class="fas fa-clock"></i> Суббота 10:00</span>
+                <span><i class="fas fa-book-open"></i> <span class="total-lessons">0</span> зан.</span>
+                <span><i class="fas fa-hourglass-half"></i> <span class="total-hours">0</span> ч.</span>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>№</th><th>Модуль</th><th>Занятий</th><th>Часов</th></tr></thead>
+                <tbody>
+                <tr><td>1</td><td><span class="module-icon"><i class="fas fa-code"></i></span>WEB-мастер. Продвинутый уровень. (HTML+CSS)</td><td>8</td><td>16</td></tr>
+                <tr><td>2</td><td><span class="module-icon"><i class="fas fa-robot"></i></span>Мой первый сайт с мозгами: Python + AI-помощники</td><td>4</td><td>8</td></tr>
+                <tr><td>3</td><td><span class="module-icon"><i class="fas fa-code"></i></span>Язык программирования C#</td><td>12</td><td>24</td></tr>
+                <tr><td>4</td><td><span class="module-icon"><i class="fas fa-gamepad"></i></span>Мир игр на Unity 2D на популярном движке + AI-помощники</td><td>12</td><td>24</td></tr>
+                <tr class="total-row"><td colspan="2"><b>Итого</b></td><td><b>0</b></td><td><b>0</b></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ГРУППА 2 -->
+    <section class="group-card" id="group2">
+        <div class="group-header">
+            <div class="group-title">
+                <h2><i class="fas fa-users"></i> Группа 2</h2>
+                <span class="level-tag middle"><i class="fas fa-chart-line"></i> Средняя</span>
+                <span class="year-badge"><i class="fas fa-calendar-check"></i> 3-й год</span>
+            </div>
+            <div class="group-meta">
+                <span><i class="fas fa-clock"></i> Суббота 12:30</span>
+                <span><i class="fas fa-book-open"></i> <span class="total-lessons">0</span> зан.</span>
+                <span><i class="fas fa-hourglass-half"></i> <span class="total-hours">0</span> ч.</span>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>№</th><th>Модуль</th><th>Занятий</th><th>Часов</th></tr></thead>
+                <tbody>
+                <tr><td>1</td><td><span class="module-icon"><i class="fas fa-dice-d6"></i></span>Геймдизайн. Учимся делать из идеи понятный концепт проекта</td><td>4</td><td>8</td></tr>
+                <tr><td>2</td><td><span class="module-icon"><i class="fas fa-robot"></i></span>Основы Python. Программирование мини-игр в MakeCode</td><td>2</td><td>4</td></tr>
+                <tr><td>3</td><td><span class="module-icon"><i class="fas fa-cubes"></i></span>Roblox. Структурируем алгоритмы и коды с помощью популярной игры</td><td>10</td><td>20</td></tr>
+                <tr class="open-lesson"><td>4</td><td><span class="module-icon"><i class="fas fa-star"></i></span>Открытый урок</td><td>1</td><td>2</td></tr>
+                <tr><td>5</td><td><span class="module-icon"><i class="fas fa-brain"></i></span>Основы Вайбкодинга. ИИ для программирования Kodik</td><td>3</td><td>6</td></tr>
+                <tr><td>6</td><td><span class="module-icon"><i class="fas fa-paint-brush"></i></span>Волшебный Photoshop</td><td>5</td><td>10</td></tr>
+                <tr><td>7</td><td><span class="module-icon"><i class="fas fa-gamepad"></i></span>2D игра на Python в PyGame</td><td>5</td><td>10</td></tr>
+                <tr><td>8</td><td><span class="module-icon"><i class="fas fa-coins"></i></span>Финансовый интеллект и предпринимательское мышление</td><td>2</td><td>4</td></tr>
+                <tr><td>9</td><td><span class="module-icon"><i class="fas fa-comment-dots"></i></span>Чат-бот на Python. Создаем своего чат-бота в VK</td><td>3</td><td>6</td></tr>
+                <tr class="open-lesson"><td>10</td><td><span class="module-icon"><i class="fas fa-star"></i></span>Открытый урок</td><td>1</td><td>2</td></tr>
+                <tr class="total-row"><td colspan="2"><b>Итого</b></td><td><b>0</b></td><td><b>0</b></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ГРУППА 3 -->
+    <section class="group-card" id="group3">
+        <div class="group-header">
+            <div class="group-title">
+                <h2><i class="fas fa-users"></i> Группа 3</h2>
+                <span class="level-tag middle"><i class="fas fa-chart-line"></i> Средняя</span>
+                <span class="year-badge"><i class="fas fa-calendar-check"></i> 2-й год</span>
+            </div>
+            <div class="group-meta">
+                <span><i class="fas fa-clock"></i> Суббота 15:00</span>
+                <span><i class="fas fa-book-open"></i> <span class="total-lessons">0</span> зан.</span>
+                <span><i class="fas fa-hourglass-half"></i> <span class="total-hours">0</span> ч.</span>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>№</th><th>Модуль</th><th>Занятий</th><th>Часов</th></tr></thead>
+                <tbody>
+                <tr><td>1</td><td><span class="module-icon"><i class="fas fa-cubes"></i></span>Продвинутый уровень в 3D. Tinkercad</td><td>6</td><td>12</td></tr>
+                <tr><td>2</td><td><span class="module-icon"><i class="fas fa-gamepad"></i></span>Roblox. Структурируем алгоритмы и коды с помощью популярной игры</td><td>10</td><td>20</td></tr>
+                <tr class="open-lesson"><td>3</td><td><span class="module-icon"><i class="fas fa-star"></i></span>Открытый урок</td><td>1</td><td>2</td></tr>
+                <tr><td>4</td><td><span class="module-icon"><i class="fas fa-cube"></i></span>Азы программирования на языке Lua. Minecraft Education</td><td>5</td><td>10</td></tr>
+                <tr><td>5</td><td><span class="module-icon"><i class="fas fa-microphone"></i></span>Обучение голосового помощника. Собственный навык для Алисы</td><td>3</td><td>6</td></tr>
+                <tr><td>6</td><td><span class="module-icon"><i class="fas fa-paint-brush"></i></span>Волшебный Photoshop</td><td>5</td><td>10</td></tr>
+                <tr><td>7</td><td><span class="module-icon"><i class="fas fa-pen-fancy"></i></span>Web-дизайн, проектируем свой сайт с нуля в Figma</td><td>6</td><td>12</td></tr>
+                <tr><td>8</td><td><span class="module-icon"><i class="fas fa-store"></i></span>Интернет-магазин за 2 занятия - Лендинг на Tilda</td><td>2</td><td>4</td></tr>
+                <tr class="open-lesson"><td>9</td><td><span class="module-icon"><i class="fas fa-star"></i></span>Открытый урок</td><td>1</td><td>2</td></tr>
+                <tr class="total-row"><td colspan="2"><b>Итого</b></td><td><b>0</b></td><td><b>0</b></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ГРУППА 4 -->
+    <section class="group-card" id="group4">
+        <div class="group-header">
+            <div class="group-title">
+                <h2><i class="fas fa-users"></i> Группа 4</h2>
+                <span class="level-tag senior"><i class="fas fa-star"></i> Старшая</span>
+                <span class="year-badge"><i class="fas fa-calendar-check"></i> 2-й год</span>
+            </div>
+            <div class="group-meta">
+                <span><i class="fas fa-clock"></i> Суббота 17:30</span>
+                <span><i class="fas fa-book-open"></i> <span class="total-lessons">0</span> зан.</span>
+                <span><i class="fas fa-hourglass-half"></i> <span class="total-hours">0</span> ч.</span>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>№</th><th>Модуль</th><th>Занятий</th><th>Часов</th></tr></thead>
+                <tbody>
+                <tr><td>1</td><td><span class="module-icon"><i class="fas fa-robot"></i></span>Основы Python. Программирование мини-игр в MakeCode</td><td>2</td><td>4</td></tr>
+                <tr><td>2</td><td><span class="module-icon"><i class="fas fa-code"></i></span>Язык программирования Python + AI-помощники</td><td>11</td><td>22</td></tr>
+                <tr><td>3</td><td><span class="module-icon"><i class="fas fa-brain"></i></span>Основы Вайбкодинга. ИИ для программирования Kodik</td><td>3</td><td>6</td></tr>
+                <tr class="open-lesson"><td>4</td><td><span class="module-icon"><i class="fas fa-star"></i></span>Открытый урок</td><td>1</td><td>2</td></tr>
+                <tr><td>5</td><td><span class="module-icon"><i class="fas fa-pen-fancy"></i></span>Web-дизайн, проектируем свой сайт с нуля в Figma</td><td>6</td><td>12</td></tr>
+                <tr><td>6</td><td><span class="module-icon"><i class="fas fa-dice-d6"></i></span>Геймдизайн. Учимся делать из идеи понятный концепт проекта</td><td>4</td><td>8</td></tr>
+                <tr><td>7</td><td><span class="module-icon"><i class="fas fa-gamepad"></i></span>2D игра на Python в PyGame</td><td>5</td><td>10</td></tr>
+                <tr><td>8</td><td><span class="module-icon"><i class="fas fa-comment-dots"></i></span>Чат-бот на Python. Создаем своего чат-бота в VK</td><td>3</td><td>6</td></tr>
+                <tr><td>8</td><td><span class="module-icon"><i class="fas fa-rocket"></i></span>AI Product Lab. Собираем MVP за 3 занятия — как взрослые IT-команды</td><td>3</td><td>6</td></tr>
+                <tr class="open-lesson"><td>9</td><td><span class="module-icon"><i class="fas fa-star"></i></span>Открытый урок</td><td>1</td><td>2</td></tr>
+                <tr class="total-row"><td colspan="2"><b>Итого</b></td><td><b>0</b></td><td><b>0</b></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</div>
+
+<!-- ========== СКРИПТ АВТОПОДСЧЁТА (исправлен) ========== -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const groups = document.querySelectorAll('.group-card');
+        let grandTotalLessons = 0;
+        let grandTotalHours = 0;
+
+        groups.forEach(function(group) {
+            const table = group.querySelector('table');
+            if (!table) return;
+            const tbody = table.querySelector('tbody');
+            if (!tbody) return;
+
+            // Находим все строки с занятиями (исключая итоговую)
+            const rows = tbody.querySelectorAll('tr:not(.total-row)');
+            let sumLessons = 0;
+            let sumHours = 0;
+
+            rows.forEach(function(row, index) {
+                const cells = row.querySelectorAll('td');
+                if (cells.length < 4) return;
+
+                // Автоматическая нумерация модулей
+                cells[0].textContent = index + 1;
+
+                // Считываем значения, если пусто - считаем как 0
+                const lessons = parseInt(cells[2].textContent.trim()) || 0;
+                const hours = parseInt(cells[3].textContent.trim()) || 0;
+
+                sumLessons += lessons;
+                sumHours += hours;
+            });
+
+            // Находим итоговую строку и обновляем её
+            const totalRow = tbody.querySelector('.total-row');
+            if (totalRow) {
+                const totalCells = totalRow.querySelectorAll('td');
+                // ИСПРАВЛЕНИЕ: В строке Итого из-за colspan="2" всего 3 ячейки, а не 4
+                if (totalCells.length >= 3) {
+                    totalCells[1].innerHTML = '<b>' + sumLessons + '</b>';
+                    totalCells[2].innerHTML = '<b>' + sumHours + '</b>';
+                }
+            }
+
+            // Обновляем данные в шапке группы
+            const metaLessons = group.querySelector('.total-lessons');
+            const metaHours = group.querySelector('.total-hours');
+            if (metaLessons) metaLessons.textContent = sumLessons;
+            if (metaHours) metaHours.textContent = sumHours;
+
+            // Прибавляем к общим итогам для футера
+            grandTotalLessons += sumLessons;
+            grandTotalHours += sumHours;
+        });
+
+        // Обновляем общий итог в самом низу страницы
+        const elTotalLessons = document.getElementById('totalAllLessons');
+        const elTotalHours = document.getElementById('totalAllHours');
+        if (elTotalLessons) elTotalLessons.textContent = grandTotalLessons;
+        if (elTotalHours) elTotalHours.textContent = grandTotalHours;
+    });
+</script>
+</body>
+</html>
