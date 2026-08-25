@@ -129,23 +129,6 @@
         .group-card:nth-child(3) { animation-delay: 0.16s; }
         .group-card:nth-child(4) { animation-delay: 0.24s; }
         @keyframes fadeUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
-
-        .group-note {
-            background: #eef4fb;
-            border-left: 4px solid #f7c948;
-            padding: 10px 18px;
-            border-radius: 8px;
-            margin: 12px 0 16px 0;
-            font-size: 0.95rem;
-            color: #1a3b5d;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .group-note i {
-            color: #f7c948;
-            font-size: 1.1rem;
-        }
     </style>
 </head>
 <body>
@@ -188,20 +171,17 @@
             </div>
         </div>
 
-        <div class="group-note">
-            <i class="fas fa-info-circle"></i> Открытые уроки в рамках модулей
-        </div>
-
         <div class="table-wrap">
             <table>
                 <thead><tr><th>№</th><th>Модуль</th><th>Занятий</th><th>Часов</th></tr></thead>
                 <tbody>
-                <tr><td>5</td><td><span class="module-icon"><i class="fas fa-desktop"></i></span>Устройство компьютера: из чего состоит пк и как он работает</td><td>1</td><td>2</td></tr>
-                <tr><td>6</td><td><span class="module-icon"><i class="fas fa-css3-alt"></i></span>CSS - технологии. Управление элементами сайта</td><td>2</td><td>4</td></tr>
-                <tr><td>2</td><td><span class="module-icon"><i class="fas fa-code"></i></span>WEB-мастер. Продвинутый уровень. (HTML+CSS)</td><td>8</td><td>16</td></tr>
-                <tr><td>2</td><td><span class="module-icon"><i class="fas fa-robot"></i></span>Мой первый сайт с мозгами: Python + AI-помощники</td><td>4</td><td>8</td></tr>
-                <tr><td>3</td><td><span class="module-icon"><i class="fas fa-code"></i></span>Язык программирования C#</td><td>12</td><td>24</td></tr>
+                <tr><td>1</td><td><span class="module-icon"><i class="fas fa-user-secret"></i></span>Этичный хакинг &amp; AI безопасность</td><td>2</td><td>4</td></tr>
+                <tr><td>2</td><td><span class="module-icon"><i class="fas fa-code"></i></span>Язык программирования C# (Начало)</td><td>2</td><td>4</td></tr>
+                <tr class="open-lesson"><td>4</td><td><span class="module-icon"><i class="fas fa-star"></i></span>Открытый урок</td><td>1</td><td>2</td></tr>
+                <tr><td>2</td><td><span class="module-icon"><i class="fas fa-code"></i></span>Язык программирования C# (Продолжение)</td><td>10</td><td>20</td></tr>
                 <tr><td>4</td><td><span class="module-icon"><i class="fas fa-gamepad"></i></span>Мир игр на Unity 2D на популярном движке + AI-помощники</td><td>12</td><td>24</td></tr>
+                <tr><td>1</td><td><span class="module-icon"><i class="fas fa-dice-d6"></i></span>Разработка 3D-игр на движке Unreal Engine</td><td>11</td><td>22</td></tr>
+                <tr class="open-lesson"><td>4</td><td><span class="module-icon"><i class="fas fa-star"></i></span>Открытый урок</td><td>1</td><td>2</td></tr>
                 <tr class="total-row"><td colspan="2"><b>Итого</b></td><td><b>0</b></td><td><b>0</b></td></tr>
                 </tbody>
             </table>
